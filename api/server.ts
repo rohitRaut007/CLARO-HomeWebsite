@@ -1,10 +1,10 @@
 import { Readable } from "node:stream";
-import {
-  createStartHandler,
-  defaultStreamHandler,
-} from "@tanstack/react-start/server";
-
-const fetchHandler = createStartHandler(defaultStreamHandler);
+// Built by `vite build` (via the TanStack Start plugin) into a self-contained
+// bundle where the `#tanstack-router-entry` virtual module is already resolved.
+// Calling `createStartHandler` directly from the raw package fails at runtime
+// with ERR_PACKAGE_IMPORT_NOT_DEFINED because that alias only exists post-build.
+// @ts-expect-error - generated at build time, no type declarations available
+import server from "../dist/server/server.js";
 
 export default async function handler(req: any, res: any) {
   try {
@@ -21,7 +21,7 @@ export default async function handler(req: any, res: any) {
         : {}),
     });
 
-    const response = await fetchHandler(request);
+    const response = await server.fetch(request);
 
     res.status(response.status);
     response.headers.forEach((value: string, key: string) => {
